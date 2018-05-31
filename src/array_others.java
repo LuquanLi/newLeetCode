@@ -60,4 +60,45 @@ public class array_others {
         }
         return sb.toString();
     }
+
+    // 121, stock 1
+    public int maxProfit(int[] prices) {
+        // input validation
+        if (prices == null || prices.length <= 1) {
+            return 0;
+        }
+
+        // min price: Min(p[0], p[1] ... p[i])
+        // local max profit: max profit for current price: prices[i] - minPrice
+        // global max profix: Max(all local max P)
+        int minPrice = prices[0];
+        int maxProfit = 0;
+
+        for (int i = 1; i < prices.length; i ++) {
+            maxProfit = Math.max(maxProfit, prices[i] - minPrice);
+            minPrice = Math.min(minPrice, prices[i]);
+        }
+
+        return maxProfit;
+    }
+
+    // 122. stock 2
+    public int maxProfit2(int[] prices) {
+        // input validation
+        if (prices == null || prices.length <= 1) {
+            return 0;
+        }
+
+        // if P[i + 1] > P[i], buy and sell
+        int totalProfit = 0;
+
+        // not buy at last day
+        for (int i = 0; i < prices.length - 1; i++){
+            if (prices[i + 1] > prices[i]) {
+                totalProfit += prices[i + 1] - prices[i];
+            }
+        }
+
+        return totalProfit;
+    }
 }
