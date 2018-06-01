@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class math {
     // 67
     public String addBinary(String a, String b) {
@@ -62,5 +64,80 @@ public class math {
         }
 
         return fakeHead.next;
+    }
+
+    // 204
+    public int countPrimes(int n) {
+        // 0 and 1 is not prime
+        if (n < 2) {
+            return 0;
+        }
+
+        int count = n - 2;
+        boolean[] isPrime = new boolean[n];
+        Arrays.fill(isPrime, true);
+
+        for (int i = 2; i < n; i ++) {
+            if (isPrime[i]) {
+                for (int j = i * 2; j < n; j += i) {
+                    if (isPrime[j]) count --;
+                    isPrime[j] = false;
+                }
+            }
+        }
+
+        return count;
+    }
+
+    // 263
+    public boolean isUgly(int num) {
+        if (num < 1) {
+            return false;
+        }
+
+        while (num > 1) {
+            if (num % 5 == 0) {
+                num /= 5;
+            } else if (num % 3 == 0) {
+                num /= 3;
+            } else if (num % 2 == 0) {
+                num /= 2;
+            } else {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    // 264
+    // we know the first seq of ugly num is : 1 2 3 4 5
+    // seq2: 2 4 6 8 10
+    // seq3: 3 6 9 12 15
+    // seq5: 5 10 15 20 25
+    public int nthUglyNumber(int n) {
+        int[] ugly = new int[n];
+        ugly[0] = 1;
+        int index2 = 0, index3 = 0, index5 = 0;
+        int factor2 = 2, factor3 = 3, factor5 = 5;
+
+        for (int i = 1; i < n; i ++) {
+            int min = Math.min(factor2, Math.min(factor3, factor5));
+            ugly[i] = min;
+
+            // can not be else if here, like 6 appears for both factor, else if will add 6 twice
+            if (factor2 == min) {
+                factor2 = 2 * ugly[++ index2];
+            }
+
+            if (factor3 == min) {
+                factor3 = 3 * ugly[++ index3];
+            }
+
+            if (factor5 == min) {
+                factor5 = 5 * ugly[++ index5];
+            }
+        }
+        return ugly[n - 1];
     }
 }

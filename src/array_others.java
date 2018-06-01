@@ -101,4 +101,110 @@ public class array_others {
 
         return totalProfit;
     }
+
+    // 123 stock3
+    // buy/sell stock at most two tranction
+    public static int maxProfit3(int[] prices) {
+        // input validation
+        if (prices == null || prices.length <= 1) {
+            return 0;
+        }
+
+        // get the max profit in first transaction
+        int[] firstMaxProfit = new int[prices.length];
+        int maxProfit = 0, minPrice = prices[0];
+
+        for (int i = 1; i < prices.length; i ++) {
+            maxProfit = Math.max(maxProfit, prices[i] - minPrice);
+            minPrice = Math.min(minPrice, prices[i]);
+            firstMaxProfit[i] = maxProfit;
+        }
+
+        // loop from backward
+        // ex: the buy/sell -> (0, i], second -> [i + 1, n]
+        // get the max profit for second: MaxPrice[i + 2, n], profit = MaxPrice - prices[i+1]
+        int maxPrice = prices[prices.length - 1], totalMaxProfit = 0;
+        for (int i = prices.length - 2; i > 1; i --) {
+            int secondProfit = maxPrice - prices[i];
+            if (secondProfit >= 0) { // second buy at i
+                totalMaxProfit = Math.max(totalMaxProfit, secondProfit + firstMaxProfit[i - 1]);
+            }
+            maxPrice = Math.max(maxPrice, prices[i]);
+        }
+
+        // firstMaxProfit[prices.length - 2] and firstMaxProfit[prices.length - 1]
+        // no 2nd transaction
+        return Math.max(
+                Math.max(totalMaxProfit, firstMaxProfit[prices.length - 2])
+                , firstMaxProfit[prices.length - 1]);
+    }
+
+    // 280. Wiggle Sort
+    // the number in odd index is greater than it's neighbour
+    // 1. sort, then swap(1,2), swap(3,4)
+    public void wiggleSort(int[] nums) {
+        // input validation
+        if (nums == null || nums.length < 2) {
+            return;
+        }
+
+        for (int i = 1; i < nums.length; i ++) {
+            if ((i % 2 == 1 && nums[i] < nums[i - 1]) || (i % 2 ==0 && nums[i] > nums[i - 1])) {
+                swap(nums, i, i- 1);
+            }
+        }
+    }
+
+    // swap the value in index m and n
+    private void swap(int[] nums, int m, int n) {
+        int temp = nums[m];
+        nums[m] = nums[n];
+        nums[n] = temp;
+    }
+
+    // 31
+
+    // 1. find the decreasing order in back, ex: [i, n)
+    // 2. value[i - 1]
+    // 3. get the least larger value > value[i - 1] in range [i, n)
+    // 4. swap value[i - 1] and value[k]
+    // 5. reverse [i, n) to increasing order
+
+    // there might be dup number
+    public void nextPermutation(int[] nums) {
+        if (nums == null || nums.length <= 1) {
+            return;
+        }
+
+        // index for the head of decreasing sequence at rear
+        int inversionPoint = nums.length - 1;
+        while (inversionPoint > 0 && nums[inversionPoint - 1] >= nums[inversionPoint]) {
+            inversionPoint --;
+        }
+
+        if (inversionPoint == 0) {
+            reverseArray(nums, 0, nums.length - 1);
+        } else {
+            // get the least larger value greater than invPoint
+            int indexLeastLarger = inversionPoint;
+            for (int i = inversionPoint + 1; i < nums.length; i ++) {
+                if (nums[inversionPoint - 1] < nums[i] && nums[indexLeastLarger] >= nums[i]) {
+                    indexLeastLarger = i;
+                }
+            }
+
+            swap(nums, inversionPoint - 1, indexLeastLarger);
+
+            // reverse
+            reverseArray(nums, inversionPoint, nums.length - 1);
+        }
+
+    }
+
+    private void reverseArray(int[] nums, int i, int j) {
+        while (i < j) {
+            swap(nums, i++, j--);
+        }
+    }
+
 }
