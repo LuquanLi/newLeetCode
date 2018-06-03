@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.Random;
 
 public class math {
     // 67
@@ -139,5 +140,85 @@ public class math {
             }
         }
         return ugly[n - 1];
+    }
+
+    /**
+     * Your Solution object will be instantiated and called as such:
+     * Solution obj = new Solution(nums);
+     * int[] param_1 = obj.reset();
+     * int[] param_2 = obj.shuffle();
+     */
+    class Solution {
+        private int[] array;
+        private int[] origin;
+
+        // 384
+        // brute force: map<index, number>, rand [1 - n) n ci
+        // put the number in array, if there is dup, can rand again
+        public Solution(int[] nums) {
+            this.array = nums;
+            this.origin = nums.clone();
+        }
+
+        /** Resets the array to its original configuration and return it. */
+        public int[] reset() {
+            this.array = origin.clone();
+            return this.array;
+        }
+
+        /** Returns a random shuffling of the array. */
+        public int[] shuffle() {
+            Random rand = new Random();
+            int size = this.array.length;
+
+            // 1. i = rand[0 - size - 1], swap array[0] with array[i]
+            // 2. i = rand[1 - size - 1], swap array[1] with array[i]
+            for (int i = 0; i < size; i ++) {
+                int rndIndex = rand.nextInt(size - i) + i; // bound exclusive
+                swap(this.array, i, rndIndex);
+            }
+
+            return this.array;
+        }
+
+        private void swap(int[] nums, int i, int j) {
+            int tmp = nums[i];
+            nums[i] = nums[j];
+            nums[j] = tmp;
+        }
+    }
+
+    // 384
+    class Solution2 {
+        private ListNode nodeHead;
+
+        /** @param head The linked list's head.
+        Note that the head is guaranteed to be not null, so it contains at least one node. */
+        public Solution2(ListNode head) {
+            this.nodeHead = head;
+        }
+
+        /** Returns a random node's value. */
+        public int getRandom() {
+            int count = 0;
+            ListNode node = this.nodeHead;
+            int value = -1;
+
+            // since the head node is not null, the head.val will be picked at first time for sure
+            while (node != null) {
+                count++;
+                // generate rand probability
+                Random rand = new Random();
+                int randInt = rand.nextInt(count);
+
+                // pick current node
+                if (randInt == count - 1) {
+                    value = node.val;
+                }
+                node = node.next;
+            }
+
+            return value;
+        }
     }
 }

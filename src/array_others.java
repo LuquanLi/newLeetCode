@@ -1,3 +1,8 @@
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 public class array_others {
     // 66
     public int[] plusOne(int[] digits) {
@@ -205,6 +210,112 @@ public class array_others {
         while (i < j) {
             swap(nums, i++, j--);
         }
+    }
+
+    // 36
+    char[][] board = {
+            {'5', '3', '.', '.', '7', '.', '.', '.', '.'},
+            {'6', '.', '.', '1', '9', '5', '.', '.', '.'},
+            {'.', '9', '8', '.', '.', '.', '.', '6', '.'},
+            {'8', '.', '.', '.', '6', '.', '.', '.', '3'},
+            {'4', '.', '.', '8', '.', '3', '.', '.', '1'},
+            {'7', '.', '.', '.', '2', '.', '.', '.', '6'},
+            {'.', '6', '.', '.', '.', '.', '2', '8', '.'},
+            {'.', '.', '.', '4', '1', '9', '.', '.', '5'},
+            {'.', '.', '.', '.', '8', '.', '.', '7', '9'}
+    };
+    public boolean isValidSudoku(char[][] board) {
+        // validation sudoku size
+        if (null == board || board.length != 9 || board[0].length != 9) {
+            return false;
+        }
+
+        // check row
+        for (int i = 0; i < board.length; i ++) {
+            if (hasDuplicate(board, i, i + 1, 0, board[0].length)) {
+                return false;
+            }
+        }
+
+        // check column
+        for (int j = 0; j < board[0].length; j ++) {
+            if (hasDuplicate(board, 0, board.length, j, j + 1)) {
+                return false;
+            }
+        }
+
+        // check each 3 by 3 block
+        for (int i = 0; i < board.length; i += 3) {
+            for (int j = 0; j < board[0].length; j += 3) {
+                if (hasDuplicate(board, i, i + 3, j, j + 3)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    // whether there is duplicate char in range [sRow, eRow), [sCol, eCol)
+    private boolean hasDuplicate(char[][] board, int sRow, int eRow, int sCol, int eCol) {
+        Set<Character> set = new HashSet<>();
+        for (int i = sRow; i < eRow; i ++){
+            for (int j = sCol; j < eCol; j ++) {
+                if (board[i][j] != '.'){
+                    if (set.contains(board[i][j])) {
+                        return true;
+                    }
+                    set.add(board[i][j]);
+                }
+            }
+        }
+        return false;
+    }
+
+    // 118
+    public List<List<Integer>> generate(int numRows) {
+        List<List<Integer>> result = new ArrayList<>();
+        if (numRows < 1) return result;
+
+        int row = 1;
+        while (row <= numRows) {
+            List<Integer> level = new ArrayList<>();
+            for (int i = 0; i < row; i ++) {
+                if (i == 0 || i == row - 1) {
+                    level.add(1);
+                } else {
+                    // get value from previous level
+                    // current level is row - 1, previous level is row - 2
+                    level.add(result.get(row - 2).get(i - 1) + result.get(row - 2).get(i));
+                }
+            }
+            result.add(level);
+            row ++;
+        }
+
+        return result;
+    }
+
+    // 119
+    public List<Integer> getRow(int rowIndex) {
+        List<Integer> result;
+        List<Integer> curLevel = new ArrayList<>();
+        int curRow = 1;
+
+        while (curRow <= rowIndex + 1) {
+            result = new ArrayList<>();
+            for (int i = 0; i < curRow; i ++) {
+                if (i == 0 || i == curRow - 1) {
+                    result.add(1);
+                } else {
+                    result.add(curLevel.get(i - 1) + curLevel.get(i));
+                }
+            }
+            curRow ++;
+            curLevel = result;
+        }
+
+        return curLevel;
     }
 
 }
