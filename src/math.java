@@ -221,4 +221,23 @@ public class math {
             return value;
         }
     }
+
+    // 7
+    public int reverse(int x) {
+        // do not need to check positive/negative
+        int result = 0;
+
+        // get last digit each time
+        while (x != 0) {
+            int lastDigit = x % 10;
+            x = x / 10;
+            int newResult = result * 10 + lastDigit;
+            if ((newResult - lastDigit) / 10 != result) { // if the newResult out of range, it will be Integer.Max
+                return 0;
+            }
+            result = newResult;
+        }
+
+        return result;
+    }
 }
