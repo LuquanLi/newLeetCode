@@ -1,3 +1,6 @@
+import java.util.HashMap;
+import java.util.Map;
+
 public class string {
     // 344
     public String reverseString(String s) {
@@ -82,5 +85,96 @@ public class string {
             str[s++] = str[e];
             str[e--] = tmp;
         }
+    }
+
+    // 557
+    //    Input: "Let's take LeetCode contest"
+    //    Output: "s'teL ekat edoCteeL tsetnoc"
+    public String reverseWords3(String s) {
+        StringBuilder sb = new StringBuilder();
+
+        int i = 0;
+        for (int j = 0; j < s.length() + 1; j ++ ) {
+            if (j == s.length() || s.charAt(j) == ' ' ) {
+                sb.append(reverseStr3(s.substring(i, j)));
+                sb.append(' ');
+                i = j + 1;
+            }
+        }
+        return sb.toString().trim();
+    }
+
+    private String reverseStr3(String str) {
+        StringBuilder sb = new StringBuilder(str);
+        return sb.reverse().toString();
+    }
+
+    // 13
+    //    I             1
+    //    V             5
+    //    X             10
+    //    L             50
+    //    C             100
+    //    D             500
+    //    M             1000
+    public int romanToInt(String s) {
+        // input validation
+        if (s == null || s.length() == 0) {
+            return 0;
+        }
+
+        // put roman into map
+        Map<Character, Integer> romanValueMap = new HashMap<>();
+        romanValueMap.put('I', 1);
+        romanValueMap.put('V', 5);
+        romanValueMap.put('X', 10);
+        romanValueMap.put('L', 50);
+        romanValueMap.put('C', 100);
+        romanValueMap.put('D', 500);
+        romanValueMap.put('M', 1000);
+
+        // iterate string from back to front
+        // if order of i < order of i + 1, -- value, else ++ value
+        int value = romanValueMap.get(s.charAt(s.length() - 1));
+        for (int i = s.length() - 2; i >= 0; i --) {
+            if (romanValueMap.get(s.charAt(i)) < romanValueMap.get(s.charAt(i + 1))) {
+                value -= romanValueMap.get(s.charAt(i));
+            } else {
+                value += romanValueMap.get(s.charAt(i));
+            }
+        }
+
+        return value;
+    }
+
+    // 6
+    /*n=numRows
+   Δ=2n-2    1                           2n-1                         4n-3
+   Δ=        2                     2n-2  2n                    4n-4   4n-2
+   Δ=        3               2n-3        2n+1              4n-5       .
+   Δ=        .           .               .               .            .
+   Δ=        .       n+2                 .           3n               .
+   Δ=        n-1 n+1                     3n-3    3n-1                 5n-5
+   Δ=2n-2    n                           3n-2                         5n-4
+   */
+    public String convert(String s, int numRows) {
+        if (numRows == 1) {
+            return s;
+        }
+
+        StringBuilder b = new StringBuilder();
+        int interval = 2 * numRows - 2;
+        int n = s.length();
+        for(int i = 0; i < numRows; i++){
+            int j = i;
+            while(j < n){
+                if(interval != 0) b.append(s.charAt(j));
+                j += interval;
+                if(i != 0 && j < n) b.append(s.charAt(j));
+                j += 2 * i;
+            }
+            interval -= 2;
+        }
+        return b.toString();
     }
 }
