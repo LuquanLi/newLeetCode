@@ -1,4 +1,6 @@
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class string {
@@ -176,5 +178,70 @@ public class string {
             interval -= 2;
         }
         return b.toString();
+    }
+
+    public String countAndSay(int n) {
+        if (n <= 0) return "";
+        String curResult = "1";
+
+        while (n-- > 1) {
+            curResult = countAndSay(curResult);
+        }
+        return curResult;
+    }
+
+    // 38
+    private String countAndSay(String str) {
+        StringBuilder result = new StringBuilder();
+
+        // current character
+        char cur = 'a';
+
+        // current count
+        int count = 0;
+
+        for (int i = 0; i < str.length() + 1; i ++) {
+            if (i == str.length() || str.charAt(i) != cur) {
+                if (count > 0) {
+                    result.append(count);
+                    result.append(cur);
+                    count = 0;
+                }
+                if (i < str.length()) {
+                    cur = str.charAt(i);
+                }
+            }
+            count ++;
+        }
+
+        return result.toString();
+    }
+
+    // 17
+    public static List<String> letterCombinations(String digits) {
+        String[] numChar = {"", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+
+        List<String> result = new ArrayList<>();
+        if (digits == null || digits.length() == 0) return result;
+
+        result.add("");
+        for (int i = 0; i < digits.length(); i ++) {
+            result = combine(numChar[digits.charAt(i) - '0'], result);
+        }
+
+        return result;
+    }
+
+    // attach each char to current result
+    private static List<String> combine(String chars, List<String> curResult) {
+        List<String> result = new ArrayList<>();
+
+        for (int i = 0; i < chars.length(); i ++) {
+            for (String str: curResult) {
+                result.add(str + chars.charAt(i));
+            }
+        }
+
+        return result;
     }
 }

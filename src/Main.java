@@ -12,9 +12,11 @@ import java.util.Stack;
 public class Main {
 
     public static void main(String[] args) {
+        ListNode n1 = new ListNode(1);
+        ListNode n2 = new ListNode(2);
+        n1.next = n2;
 
     }
-
 
 
 }
