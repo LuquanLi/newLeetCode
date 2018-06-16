@@ -1,3 +1,4 @@
+import java.util.PriorityQueue;
 import java.util.Stack;
 
 public class linkedlist {
@@ -135,5 +136,131 @@ public class linkedlist {
         }
 
         return false;
+    }
+
+    // 23
+    //    Input:
+//            [
+//            1->4->5,
+//            1->3->4,
+//            2->6
+//            ]
+//    Output: 1->1->2->3->4->4->5->6
+    public static ListNode mergeKLists(ListNode[] lists) {
+        if (lists == null || lists.length == 0) return null;
+
+        ListNode dummyHead = new ListNode(-1);
+        ListNode iter = dummyHead;
+        PriorityQueue<ListNode> queue = new PriorityQueue<>(lists.length, (ListNode l1, ListNode l2) -> l1.val - l2.val);
+
+        // add the nodes from lists to priority queue
+        for (ListNode node: lists) {
+            if (node != null) {
+                queue.add(node);
+            }
+        }
+
+        while (!queue.isEmpty()) {
+            ListNode curNode = queue.poll();
+            iter.next = curNode;
+            iter = iter.next;
+
+            if (curNode.next != null) {
+                queue.add(curNode.next);
+            }
+        }
+
+        return dummyHead.next;
+    }
+
+    // 234
+    // check whether a linkedlist is palindrome
+    // 1. break the list into two
+    // 2. reverse the second half
+    // 3. compare one by one
+    public static boolean isPalindrome(ListNode head) {
+        if (head == null) return false;
+
+        ListNode fast = head;
+        ListNode slow = head;
+        while (fast.next != null && fast.next.next != null) {
+            fast = fast.next.next;
+            slow = slow.next;
+        }
+
+        ListNode secondHead = slow.next;
+        slow.next = null;
+        secondHead = reverseLinkedList(secondHead);
+
+        // compare one by one
+        while (head != null && secondHead != null) {
+            if (head.val != secondHead.val) return false;
+            head = head.next;
+            secondHead = secondHead.next;
+        }
+
+        return true;
+    }
+
+    // dummy -> 1 -> 2 -> 3 -> 4
+    // prev = dummy, cur = 1, next = 2
+    // dummmy <- 1 <- 2
+    // cur.next = dummy, 2.next = 1
+    private static ListNode reverseLinkedList(ListNode head) {
+        ListNode cur = head;
+        ListNode prev = null;
+
+        while (cur != null) {
+            ListNode next = cur.next;
+            cur.next = prev;
+            prev = cur;
+            cur = next;
+        }
+
+        return prev;
+    }
+
+    // 328
+    //    Input: 1->2->3->4->5->NULL
+    //    Output: 1->3->5->2->4->NULL
+    public static ListNode oddEvenList(ListNode head) {
+        ListNode oddHead = new ListNode(-1);
+        ListNode evenHead = new ListNode(-1);
+        ListNode oddIter = oddHead;
+        ListNode evenIter = evenHead;
+
+        int count = 1;
+        while (head != null) {
+            if (count % 2 == 1) { // odd
+                oddIter.next = head;
+                oddIter = oddIter.next;
+            } else {
+                evenIter.next = head;
+                evenIter = evenIter.next;
+            }
+            // notice!
+            ListNode next = head.next;
+            head.next = null;
+            head = next;
+            count ++;
+        }
+
+        // connect
+        oddIter.next = evenHead.next;
+        return oddHead.next;
+    }
+
+    // 328
+    public ListNode oddEvenList2(ListNode head) {
+        if (head == null) return null;
+        ListNode odd = head, even = head.next, evenHead = even;
+        while (even != null && even.next != null) {
+            odd.next = even.next;
+            odd = odd.next;
+            even.next = odd.next;
+            even = even.next;
+        }
+        odd.next = evenHead;
+        return head;
     }
 }
