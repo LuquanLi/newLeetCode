@@ -18,24 +18,20 @@ public class Main {
         ListNode n2 = new ListNode(2);
         ListNode n3 = new ListNode(3);
         ListNode n4 = new ListNode(4);
+        ListNode n6 = new ListNode(6);
         n1.next = n2;
         n2.next = n3;
         n3.next = n4;
+        n4.next = n6;
 
-        System.out.println();
-//        //ListNode r = oddEvenList(n1);
-//        while (r != null) {
-//            System.out.println(r.val);
-//            r = r.next;
+//        ListNode head = swapPairs(n1);
+//        while (head != null) {
+//            System.out.println(head.val);
+//            head = head.next;
 //        }
 
     }
 
-//    Input: 4->2->1->3
-//    Output: 1->2->3->4
-    public ListNode insertionSortList(ListNode head) {
-
-    }
 
 }
 

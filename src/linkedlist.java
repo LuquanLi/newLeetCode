@@ -263,4 +263,117 @@ public class linkedlist {
         odd.next = evenHead;
         return head;
     }
+
+    // 147
+    public static ListNode insertionSortList(ListNode head) {
+        ListNode dummyHead = new ListNode(Integer.MIN_VALUE);
+        dummyHead.next = head;
+        ListNode cur = head;
+
+        while (cur != null) {
+            ListNode next = cur.next;
+            cur.next = null;
+            insertToSortedList(dummyHead, cur);
+            cur = next;
+        }
+
+        return dummyHead.next;
+    }
+
+    private static void insertToSortedList(ListNode dummyHead, ListNode node) {
+        ListNode iter = dummyHead;
+
+        while (iter.next != null) {
+            if (node.val >= iter.val && node.val < iter.next.val) break;
+            iter = iter.next;
+        }
+
+        ListNode next = iter.next;
+        iter.next = node;
+        node.next = next;
+    }
+
+    // 160
+    //    A:      a1 → a2
+//                   ↘
+//                      c1 → c2 → c3
+//                   ↗
+//    B: b1 → b2 → b3
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        // 1. since there is no cycle, get length from each head
+        int countA = getLength(headA);
+        int countB = getLength(headB);
+
+        // 2. the longer on move <diff> steps
+        int diff = Math.abs(countA - countB);
+        while (diff-- > 0) {
+            if (countA > countB) {
+                headA = headA.next;
+            } else {
+                headB = headB.next;
+            }
+        }
+
+        // 3. move together until they met, return null if both reach the end
+        while (headA != headB) {
+            headA = headA.next;
+            headB = headB.next;
+        }
+
+        return headA;
+    }
+
+    private int getLength(ListNode head) {
+        ListNode iter = head;
+        int count = 0;
+
+        while (iter != null) {
+            iter = iter.next;
+            count ++;
+        }
+
+        return count;
+    }
+
+    // 24
+    // Given 1->2->3->4, you should return the list as 2->1->4->3.
+    public static ListNode swapPairs(ListNode head) {
+        ListNode dummyHead = new ListNode(-1);
+        ListNode iter = dummyHead;
+        dummyHead.next = head;
+
+        while (iter.next != null && iter.next.next != null) {
+            // swap iter.next and iter.next.next
+            ListNode next = iter.next;
+            iter.next = next.next;
+            ListNode nnext = iter.next.next;
+            iter.next.next = next;
+            next.next = nnext;
+
+            iter = iter.next.next;
+        }
+
+        return dummyHead.next;
+    }
+
+    // 142
+    // Given a linked list, return the node where the cycle begins. If there is no cycle, return null.
+    public ListNode detectCycle(ListNode head) {
+        ListNode slow = head, fast = head;
+
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+
+            if (slow == fast) {
+                fast = head;
+                while (slow != fast) {
+                    slow = slow.next;
+                    fast = fast.next;
+                }
+                return slow;
+            }
+        }
+        return null;
+    }
 }
